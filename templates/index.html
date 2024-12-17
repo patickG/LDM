@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI图像生成与合成</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="{{ url_for('main') }}" class="nav-btn active">图像生成</a>
+            <a href="{{ url_for('gallery') }}" class="nav-btn">图片库</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>AI图像生成与合成</h1>
+        
+        <!-- 操作指引 -->
+        <div class="guide-section">
+            <h2>使用说明</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>准备结构图</h3>
+                        <p>两种方式获取结构图：</p>
+                        <ul>
+                            <li>输入提示词，AI生成新图片</li>
+                            <li>从图库选择或上传已有图片</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>准备特征图</h3>
+                        <p>两种方式获取特征图：</p>
+                        <ul>
+                            <li>输入提示词，AI生成新图片</li>
+                            <li>从图库选择或上传已有图片</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>合成图片</h3>
+                        <p>选择好两张图片后，点击"合成图片"按钮进行风格迁移</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- 左侧图片区域 -->
+            <div class="generation-section">
+                <div class="preview-section">
+                    <!-- 结构图区域 -->
+                    <div class="preview-box">
+                        <div class="box-header">
+                            <h3>结构图</h3>
+                            <span class="tooltip" title="结构图决定最终图片的基本内容和布局">ℹ️</span>
+                        </div>
+                        <div class="image-container" id="preview1">
+                            <span class="placeholder-text">请生成或选择结构图</span>
+                        </div>
+                        <!-- AI生成区域 -->
+                        <div class="generate-area">
+                            <div class="input-group">
+                                <input type="text" id="prompt1" placeholder="输入提示词，让AI生成结构图">
+                                <button class="generate-btn" onclick="generateImage('structure')">
+                                    <i class="icon-generate"></i>
+                                    生成
+                                </button>
+                            </div>
+                        </div>
+                        <!-- 选择/上传区域 -->
+                        <div class="button-group">
+                            <button class="select-btn" onclick="openImageSelector('structure', 'preview1')">
+                                <i class="icon-gallery"></i>
+                                选择已有结构���
+                            </button>
+                            <label class="upload-btn">
+                                <i class="icon-upload"></i>
+                                上传结构图
+                                <input type="file" id="structureUpload" accept="image/*" style="display: none;" onchange="uploadImage(this, 'structure')">
+                            </label>
+                        </div>
+                    </div>
+                    <!-- 特征图区域 -->
+                    <div class="preview-box">
+                        <div class="box-header">
+                            <h3>特征图</h3>
+                            <span class="tooltip" title="特征图决定最终图片的艺术风格">ℹ️</span>
+                        </div>
+                        <div class="image-container" id="preview2">
+                            <span class="placeholder-text">请生成或选择特征图</span>
+                        </div>
+                        <!-- AI生成区域 -->
+                        <div class="generate-area">
+                            <div class="input-group">
+                                <input type="text" id="prompt2" placeholder="输入提示词，让AI生成特征图">
+                                <button class="generate-btn" onclick="generateImage('feature')">
+                                    <i class="icon-generate"></i>
+                                    生成
+                                </button>
+                            </div>
+                        </div>
+                        <!-- 选择/上传区域 -->
+                        <div class="button-group">
+                            <button class="select-btn" onclick="openImageSelector('feature', 'preview2')">
+                                <i class="icon-gallery"></i>
+                                选择已有特征图
+                            </button>
+                            <label class="upload-btn">
+                                <i class="icon-upload"></i>
+                                上传特征图
+                                <input type="file" id="featureUpload" accept="image/*" style="display: none;" onchange="uploadImage(this, 'feature')">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧合成结果区域 -->
+            <div class="result-section">
+                <div class="box-header">
+                    <h3>合成结果</h3>
+                    <span class="tooltip" title="将结构图的内容与特征图���风格相结合">ℹ️</span>
+                </div>
+                <div class="result-container" id="resultPreview">
+                    <span class="placeholder-text">请先准备好结构图和特征图，然后点击下方的合成按钮</span>
+                </div>
+                <button id="combineBtn" class="combine-btn" onclick="handleCombineClick()" disabled>
+                    <i class="icon-combine"></i>
+                    开始合成
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片选择模态框 -->
+    <div class="modal" id="imageSelectorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>选择图片</h3>
+                <span class="close-btn" onclick="closeImageSelector()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="image-grid" id="selectorGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

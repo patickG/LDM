@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI图像生成与合成</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI图像生成与合成</h1>
+        
+        <div class="preview-section">
+            <div class="preview-box">
+                <h3>结构图预览</h3>
+                <div class="image-preview" id="preview1">
+                    <span class="placeholder-text">生成的结构图将显示在这里</span>
+                </div>
+            </div>
+            <div class="preview-box">
+                <h3>特征图预览</h3>
+                <div class="image-preview" id="preview2">
+                    <span class="placeholder-text">生成的特征图将显示在这里</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="text" id="prompt1" placeholder="输入结构图生成要求">
+            </div>
+            <div class="input-group">
+                <input type="text" id="prompt2" placeholder="输入特征图生成要求">
+            </div>
+            <button id="generateBtn" class="generate-btn">生成图片</button>
+        </div>
+
+        <div class="result-section">
+            <h3>合成结果</h3>
+            <div class="image-preview" id="resultPreview">
+                <span class="placeholder-text">合成结果将显示在这里</span>
+            </div>
+            <button id="combineBtn" class="generate-btn" disabled>合成图片</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
